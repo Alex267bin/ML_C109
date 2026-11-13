@@ -1,4 +1,4 @@
-"""Local Flask demo for the trained Favorita product-sales model."""
+"""Ứng dụng Flask chạy cục bộ để minh họa mô hình dự đoán doanh số Favorita."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -95,7 +95,7 @@ def predict():
     except FileNotFoundError as exc:
         return jsonify({"error": str(exc)}), 503
     except Exception:
-        app.logger.exception("Prediction failed")
+        app.logger.exception("Tạo dự đoán không thành công")
         return jsonify({"error": "Không thể tạo dự đoán. Kiểm tra dữ liệu và mô hình đã huấn luyện."}), 500
 
 
