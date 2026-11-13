@@ -9,14 +9,14 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="#"><span class="brand-mark">F</span><span>FAVORITA<span class="brand-sub">SALES INTELLIGENCE</span></span></a>
-    <span class="status"><i></i> LOCAL DEMO</span>
+    <a class="brand" href="#"><span class="brand-mark">F</span><span>FAVORITA<span class="brand-sub">PHÂN TÍCH DOANH SỐ</span></span></a>
+    <span class="status"><i></i> BẢN CHẠY CỤC BỘ</span>
   </header>
   <main class="layout">
     <section class="hero">
-      <div class="eyebrow">MACHINE LEARNING · PRACTICE 02</div>
+      <div class="eyebrow">HỌC MÁY · BÀI THỰC HÀNH 02</div>
       <h1>Dự đoán doanh số<br><em>sản phẩm</em></h1>
-      <p>Sử dụng mô hình Machine Learning được huấn luyện từ dữ liệu bán hàng Favorita để ước tính doanh số theo cửa hàng, ngành hàng và ngày dự đoán.</p>
+      <p>Sử dụng mô hình học máy được huấn luyện từ dữ liệu bán hàng Favorita để ước tính doanh số theo cửa hàng, ngành hàng và ngày dự đoán.</p>
       <div class="hero-note"><span>✦</span> Dự đoán được tạo trực tiếp từ mô hình đã lưu, không phải số liệu minh họa.</div>
     </section>
 
@@ -26,7 +26,7 @@
 
     <section class="workspace">
       <form id="predict-form" class="panel form-panel">
-        <div class="panel-heading"><div><span class="step">01 / INPUT</span><h2>Thông tin dự đoán</h2></div><span class="heading-icon">↗</span></div>
+        <div class="panel-heading"><div><span class="step">01 / ĐẦU VÀO</span><h2>Thông tin dự đoán</h2></div><span class="heading-icon">↗</span></div>
         <label for="store">Cửa hàng</label>
         <select id="store" required {% if not stores %}disabled{% endif %}>
           {% for store in stores %}<option value="{{ store.store_nbr }}">Cửa hàng {{ store.store_nbr }} · {{ store.city }} ({{ store.type }})</option>{% endfor %}
@@ -44,13 +44,13 @@
       </form>
 
       <section class="panel result-panel">
-        <div class="panel-heading"><div><span class="step">02 / OUTPUT</span><h2>Kết quả dự đoán</h2></div><span class="result-chip">LIVE INFERENCE</span></div>
+        <div class="panel-heading"><div><span class="step">02 / ĐẦU RA</span><h2>Kết quả dự đoán</h2></div><span class="result-chip">DỰ ĐOÁN TRỰC TIẾP</span></div>
         <div id="empty-state" class="empty-state"><div class="empty-art">∿</div><h3>Sẵn sàng dự đoán</h3><p>Điền thông tin ở biểu mẫu và nhấn nút dự đoán để xem kết quả từ mô hình.</p></div>
         <div id="result" class="result-content" hidden>
-          <span class="result-label">DOANH SỐ DỰ ĐOÁN</span>
+          <span class="result-label">DOANH SỐ ƯỚC TÍNH</span>
           <div class="prediction-number"><strong id="prediction-value">—</strong><span>đơn vị</span></div>
           <div class="result-divider"></div>
-          <div class="result-meta"><span>Mô hình</span><strong id="model-name">Best model</strong></div>
+          <div class="result-meta"><span>Mô hình</span><strong id="model-name">Mô hình tốt nhất</strong></div>
           <div class="result-meta"><span>Ngày dự đoán</span><strong id="result-date">—</strong></div>
           <div class="result-meta"><span>Ngành hàng</span><strong id="result-family">—</strong></div>
           <p class="disclaimer">Đây là dự báo tham khảo dựa trên các đặc trưng đầu vào và dữ liệu huấn luyện, không phải doanh số thực tế được đảm bảo.</p>
@@ -64,7 +64,7 @@
       <article class="info-card"><span class="info-icon">⌁</span><div><h3>Đầu vào mô hình</h3><p>Cửa hàng, ngành hàng, ngày, khuyến mãi, dầu và lịch nghỉ lễ.</p></div></article>
       <article class="info-card"><span class="info-icon">◎</span><div><h3>Đánh giá mô hình</h3><p>So sánh bằng MAE, MSE và RMSE trong tập validation.</p></div></article>
     </section>
-    <footer>FAVORITA SALES INTELLIGENCE <span>·</span> MACHINE LEARNING COURSE PROJECT</footer>
+    <footer>FAVORITA – PHÂN TÍCH DOANH SỐ <span>·</span> ĐỒ ÁN HỌC MÁY</footer>
   </main>
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
