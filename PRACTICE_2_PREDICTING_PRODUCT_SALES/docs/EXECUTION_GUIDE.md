@@ -1,13 +1,13 @@
-# Execution guide
+# Hướng dẫn chạy chương trình
 
-Run commands from `PRACTICE_2_PREDICTING_PRODUCT_SALES/`.
+Thực hiện các lệnh bên dưới từ thư mục `PRACTICE_2_PREDICTING_PRODUCT_SALES/`.
 
-1. Install: `pip install -r requirements.txt`
-2. Place Kaggle CSV files in `data/raw/`.
-3. EDA: `python -m scripts.run_eda`
-4. Model pipeline: `python -m scripts.run_pipeline`
-5. Tests: `python -m pytest -q`
+1. Cài đặt các thư viện cần thiết: `pip install -r requirements.txt`
+2. Đặt các tệp CSV tải từ Kaggle vào thư mục `data/raw/`.
+3. Chạy phân tích dữ liệu khám phá (EDA): `python -m scripts.run_eda`
+4. Chạy quy trình huấn luyện và đánh giá mô hình: `python -m scripts.run_pipeline`
+5. Chạy kiểm thử: `python -m pytest -q`
 
-EDA outputs are written to `outputs/eda/`; model metrics and predictions are written to `outputs/metrics/` and `outputs/predictions/`.
+Kết quả EDA được lưu trong `outputs/eda/`; các chỉ số đánh giá mô hình và kết quả dự đoán được lưu lần lượt trong `outputs/metrics/` và `outputs/predictions/`.
 
-The data files are excluded from Git to avoid committing large competition datasets. Keep original raw files unchanged.
+Các tệp dữ liệu được loại trừ khỏi Git để tránh đưa những bộ dữ liệu dung lượng lớn của cuộc thi lên kho mã nguồn. Giữ nguyên các tệp dữ liệu thô ban đầu, không chỉnh sửa trực tiếp chúng.
