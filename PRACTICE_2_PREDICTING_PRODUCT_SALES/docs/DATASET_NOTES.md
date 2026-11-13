@@ -1,18 +1,18 @@
-# Dataset audit and feature availability
+# Kiểm tra bộ dữ liệu và các đặc trưng hiện có
 
-The project uses the Corporación Favorita retail time-series dataset. The core training table contains daily sales by store and product family, including the target `sales` and promotion count `onpromotion`.
+Dự án sử dụng bộ dữ liệu chuỗi thời gian bán lẻ Corporación Favorita. Bảng dữ liệu huấn luyện chính chứa doanh số hằng ngày theo cửa hàng và nhóm sản phẩm, bao gồm biến mục tiêu `sales` và số lượng mặt hàng được khuyến mãi `onpromotion`.
 
-| Assignment concept | Available in Favorita data? | Project treatment |
+| Nội dung trong yêu cầu bài tập | Có trong dữ liệu Favorita không? | Cách dự án xử lý |
 |---|---|---|
-| Product/category | Yes (`family`) | Used |
-| Store/location | Yes | Used |
-| Date/seasonality | Yes | Calendar features |
-| Promotions | Yes (`onpromotion`) | Used |
-| Holidays/events | Yes | Aggregated daily holiday indicator |
-| Oil price | Yes | Used with median imputation |
-| Customer demographics | No | Not fabricated |
-| Reviews/ratings | No | Not fabricated |
-| Customer lifetime value | No | Not fabricated |
-| Advertising spend/campaign budget | No | Not fabricated |
+| Sản phẩm / danh mục sản phẩm | Có (`family`) | Được sử dụng |
+| Cửa hàng / địa điểm | Có | Được sử dụng |
+| Ngày / tính mùa vụ | Có | Tạo các đặc trưng lịch |
+| Khuyến mãi | Có (`onpromotion`) | Được sử dụng |
+| Ngày lễ / sự kiện | Có | Tổng hợp thành biến đánh dấu ngày lễ theo ngày |
+| Giá dầu | Có | Được sử dụng và điền giá trị thiếu bằng trung vị |
+| Nhân khẩu học khách hàng | Không | Không tự tạo dữ liệu giả |
+| Đánh giá / xếp hạng | Không | Không tự tạo dữ liệu giả |
+| Giá trị vòng đời khách hàng | Không | Không tự tạo dữ liệu giả |
+| Chi phí quảng cáo / ngân sách chiến dịch | Không | Không tự tạo dữ liệu giả |
 
-The baseline does not use transaction totals or sales lag features. They require a clearly defined forecast-time information set to avoid target leakage.
+Quy trình cơ sở hiện tại không sử dụng tổng số giao dịch hoặc các đặc trưng doanh số trễ (lag). Những dữ liệu này cần được xác định rõ có sẵn tại thời điểm dự báo hay không để tránh rò rỉ thông tin mục tiêu (target leakage).
