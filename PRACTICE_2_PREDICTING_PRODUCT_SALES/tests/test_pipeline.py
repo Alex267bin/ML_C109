@@ -31,6 +31,19 @@ def test_chronological_split_keeps_order():
     assert y_train.max() < y_valid.min()
 
 
+def test_chronological_split_never_splits_same_date():
+    dates = pd.Series(pd.to_datetime([
+        "2024-01-01", "2024-01-01", "2024-01-02",
+        "2024-01-02", "2024-01-03", "2024-01-03",
+        "2024-01-04", "2024-01-04", "2024-01-05", "2024-01-05"
+    ]))
+    X = pd.DataFrame({"x": range(10)})
+    y = pd.Series(range(10))
+    X_train, X_valid, _, _ = chronological_split(X, y, 0.2, dates=dates)
+    assert len(X_train) + len(X_valid) == len(X)
+    assert dates.iloc[X_train.index].max() < dates.iloc[X_valid.index].min()
+
+
 def test_evaluate_returns_three_metrics():
     result = evaluate([1, 2, 3], [1, 3, 2])
     assert set(result) == {"MAE", "MSE", "RMSE"}
