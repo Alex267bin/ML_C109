@@ -10,7 +10,7 @@ form.addEventListener("submit", async (event) => {
   result.hidden = true;
   emptyState.hidden = false;
   button.disabled = true;
-  button.querySelector("span").textContent = "Đang tính toán...";
+  button.querySelector("span").textContent = "Đang xử lý dự đoán...";
   try {
     const response = await fetch("/api/predict", {
       method: "POST",
@@ -23,7 +23,7 @@ form.addEventListener("submit", async (event) => {
       })
     });
     const data = await response.json();
-    if (!response.ok) throw new Error(data.error || "Không thể dự đoán.");
+    if (!response.ok) throw new Error(data.error || "Không thể tạo dự đoán.");
     document.getElementById("prediction-value").textContent =
       new Intl.NumberFormat("vi-VN", {maximumFractionDigits: 2}).format(data.prediction);
     document.getElementById("model-name").textContent = data.model;
