@@ -1,4 +1,4 @@
-"""Resource-aware ML pipeline for Favorita daily product sales forecasting."""
+"""Quy trình học máy dự đoán doanh số sản phẩm hằng ngày của Favorita."""
 from __future__ import annotations
 
 import argparse
@@ -26,8 +26,8 @@ def load_data(data_dir: Path) -> pd.DataFrame:
     missing = [name for name in required if not (data_dir / name).exists()]
     if missing:
         raise FileNotFoundError(
-            "Missing dataset file(s): " + ", ".join(missing)
-            + ". Place the Kaggle Store Sales files in data/raw/."
+             "Thiếu tệp dữ liệu: " + ", ".join(missing)
+            + ". Hãy đặt các tệp dữ liệu Kaggle Store Sales vào thư mục data/raw/."
         )
 
     train = pd.read_csv(data_dir / "train.csv", parse_dates=["date"])
@@ -76,19 +76,19 @@ def chronological_split(
 ):
     """Split on a date boundary so one calendar day cannot appear in both sets."""
     if not 0 < validation_fraction < 1:
-        raise ValueError("validation_fraction must be between 0 and 1.")
+        raise ValueError("Tỷ lệ tập kiểm định phải nằm trong khoảng từ 0 đến 1.")
 
     if dates is None:
         # Compatibility fallback for small examples without a date column.
         split_at = int(len(X) * (1 - validation_fraction))
         if split_at <= 0 or split_at >= len(X):
-            raise ValueError("Not enough rows for a chronological split.")
+            raise ValueError("Không đủ dòng dữ liệu để chia theo thứ tự thời gian.")
         return X.iloc[:split_at], X.iloc[split_at:], y.iloc[:split_at], y.iloc[split_at:]
 
     date_values = pd.to_datetime(dates).reset_index(drop=True)
     unique_dates = np.sort(date_values.dropna().unique())
     if len(unique_dates) < 2:
-        raise ValueError("At least two distinct dates are required for validation.")
+        raise ValueError("Cần ít nhất hai ngày khác nhau để tạo tập kiểm định.")
     split_at = int(len(unique_dates) * (1 - validation_fraction))
     split_at = min(max(split_at, 1), len(unique_dates) - 1)
     validation_start = unique_dates[split_at]
@@ -134,7 +134,7 @@ def run_pipeline(
 ) -> pd.DataFrame:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     data = load_data(data_dir)
-    LOGGER.info("Loaded %s rows and %s columns", *data.shape)
+    LOGGER.info("Đã tải %s dòng dữ liệu và %s cột", *data.shape)
     X, y = build_features(data)
     X_train, X_valid, y_train, y_valid = chronological_split(
         X, y, validation_fraction=0.2, dates=data.loc[X.index, "date"]
@@ -146,8 +146,8 @@ def run_pipeline(
         sampled = X_train.sample(n=max_train_rows, random_state=42).sort_index()
         y_train = y_train.loc[sampled.index]
         X_train = sampled
-        LOGGER.info("Training sample: %s rows (from chronological training period)", len(X_train))
-    LOGGER.info("Validation rows: %s", len(X_valid))
+        LOGGER.info("Số dòng dùng để huấn luyện: %s (được lấy mẫu từ giai đoạn huấn luyện theo thời gian)", len(X_train))
+    LOGGER.info("Số dòng kiểm định: %s", len(X_valid))
 
     candidates = {
         "Linear Regression": LinearRegression(),
@@ -173,14 +173,14 @@ def run_pipeline(
 
     rows, fitted = [], {}
     for name, estimator in candidates.items():
-        LOGGER.info("Training %s", name)
+        LOGGER.info("Đang huấn luyện mô hình: %s", name)
         model = Pipeline([
             ("preprocessor", make_preprocessor(X_train)),
             ("regressor", estimator)
         ])
         model.fit(X_train, y_train)
         predictions = np.maximum(0, model.predict(X_valid))
-        rows.append({"Model": name, **evaluate(y_valid, predictions)})
+        rows.append({"Mô hình": name, **evaluate(y_valid, predictions)})
         fitted[name] = model
 
     comparison = pd.DataFrame(rows).sort_values("RMSE")
@@ -191,34 +191,34 @@ def run_pipeline(
 
     best_predictions = np.maximum(0, best_model.predict(X_valid))
     pd.DataFrame({
-        "actual_sales": y_valid.to_numpy(),
-        "predicted_sales": best_predictions
+        "doanh_so_thuc_te": y_valid.to_numpy(),
+        "doanh_so_du_doan": best_predictions
     }).to_csv(predictions_dir / "validation_predictions.csv", index=False)
 
     summary = {
-        "best_model": best_name,
-        "selection_metric": "RMSE",
-        "training_rows": int(len(y_train)),
-        "validation_rows": int(len(y_valid)),
-        "validation_period_start": str(data.loc[X_valid.index, "date"].min().date()),
-        "validation_period_end": str(data.loc[X_valid.index, "date"].max().date()),
-        "metrics": evaluate(y_valid, best_predictions),
+        "mo_hinh_tot_nhat": best_name,
+        "tieu_chi_lua_chon": "RMSE",
+        "so_dong_huan_luyen": int(len(y_train)),
+        "so_dong_kiem_dinh": int(len(y_valid)),
+        "ngay_bat_dau_kiem_dinh": str(data.loc[X_valid.index, "date"].min().date()),
+        "ngay_ket_thuc_kiem_dinh": str(data.loc[X_valid.index, "date"].max().date()),
+        "cac_chi_so": evaluate(y_valid, best_predictions),
     }
     (metrics_dir / "best_model.json").write_text(
         json.dumps(summary, indent=2), encoding="utf-8"
     )
-    LOGGER.info("Best model: %s", best_name)
+    LOGGER.info("Mô hình tốt nhất: %s", best_name)
     return comparison
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Train and evaluate product sales models.")
+    parser = argparse.ArgumentParser(description="Huấn luyện và đánh giá các mô hình dự đoán doanh số sản phẩm.")
     parser.add_argument("--data-dir", type=Path, default=Path("data/raw"))
     parser.add_argument("--output-dir", type=Path, default=Path("outputs"))
     parser.add_argument("--model-dir", type=Path, default=Path("models/saved_models"))
     parser.add_argument(
         "--max-train-rows", type=int, default=250_000,
-        help="Maximum training rows sampled from the chronological training period; 0 uses all rows."
+        help="Số dòng tối đa được lấy mẫu từ giai đoạn huấn luyện theo thời gian; nhập 0 để dùng toàn bộ dữ liệu."
     )
     args = parser.parse_args()
     result = run_pipeline(args.data_dir, args.output_dir, args.model_dir, args.max_train_rows)
