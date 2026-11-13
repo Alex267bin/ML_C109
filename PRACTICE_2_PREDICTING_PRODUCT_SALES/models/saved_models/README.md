@@ -1,0 +1,1 @@
+Trained model artifacts are written here after running the pipeline. Binary model files are excluded from Git.
