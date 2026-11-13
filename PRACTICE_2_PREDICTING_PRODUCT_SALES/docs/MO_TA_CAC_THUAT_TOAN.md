@@ -22,7 +22,7 @@ Trước khi huấn luyện, chương trình thực hiện:
    - **Dữ liệu số:** thay giá trị thiếu bằng trung vị (`median`), sau đó chuẩn hóa bằng `StandardScaler`.
    - **Dữ liệu phân loại:** thay giá trị thiếu bằng giá trị xuất hiện nhiều nhất (`most_frequent`), sau đó mã hóa One-Hot (`OneHotEncoder`). Giá trị phân loại chưa gặp khi huấn luyện được bỏ qua thay vì gây lỗi.
 
-Toàn bộ bước tiền xử lý được đóng gói trong `Pipeline` và `ColumnTransformer), sau đó ghép với từng mô hình để bảo đảm các phép biến đổi được học từ tập huấn luyện.
+Toàn bộ bước tiền xử lý được đóng gói trong `Pipeline` và `ColumnTransformer`, sau đó ghép với từng mô hình để bảo đảm các phép biến đổi được học từ tập huấn luyện.
 
 ## 3. Các thuật toán được sử dụng
 
