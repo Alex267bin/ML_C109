@@ -26,7 +26,7 @@ def load_data(data_dir: Path) -> pd.DataFrame:
     missing = [name for name in required if not (data_dir / name).exists()]
     if missing:
         raise FileNotFoundError(
-             "Thiếu tệp dữ liệu: " + ", ".join(missing)
+            "Thiếu tệp dữ liệu: " + ", ".join(missing)
             + ". Hãy đặt các tệp dữ liệu Kaggle Store Sales vào thư mục data/raw/."
         )
 
@@ -185,7 +185,7 @@ def run_pipeline(
 
     comparison = pd.DataFrame(rows).sort_values("RMSE")
     comparison.to_csv(metrics_dir / "model_comparison.csv", index=False)
-    best_name = str(comparison.iloc[0]["Model"])
+    best_name = str(comparison.iloc[0]["Mô hình"])
     best_model = fitted[best_name]
     joblib.dump(best_model, model_dir / "best_model.joblib")
 
