@@ -1,67 +1,79 @@
-# Hướng dẫn thực thi Practice 3
+# Hướng dẫn cài đặt và thực thi bài thực hành 3
 
-## 1. Môi trường
+## 1. Chuẩn bị môi trường
 
-Chạy các lệnh tại thư mục:
+Mở thiết bị đầu cuối và di chuyển vào thư mục:
 
 ```bash
 cd PRACTICE_3_CUSTOMER_SEGMENTATION
 ```
 
-Tạo và kích hoạt môi trường ảo:
+Tạo môi trường Python ảo:
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate
-# Windows PowerShell:
-# .venv\Scripts\Activate.ps1
 ```
 
-Cài thư viện:
+Kích hoạt môi trường ảo:
+
+```bash
+source .venv/bin/activate
+```
+
+Nếu sử dụng Windows PowerShell:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+Cài đặt các thư viện cần thiết:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## 2. Kiểm tra cấu trúc dữ liệu
+## 2. Kiểm tra dữ liệu đầu vào
 
-Đảm bảo file dữ liệu tồn tại:
+Kiểm tra các tệp dữ liệu hiện có:
 
 ```bash
 ls data/raw/
 ```
 
-Dataset mặc định là `data/raw/Mall_Customers.csv`. Ba cột số bắt buộc là `Age`, `Annual Income (k$)` và `Spending Score (1-100)`.
+Tệp dữ liệu mặc định là `data/raw/Mall_Customers.csv`. Dữ liệu phải có ba cột số bắt buộc: `Age`, `Annual Income (k$)` và `Spending Score (1-100)`.
 
-## 3. Chạy Customer Segmentation
+## 3. Thực thi phần phân nhóm khách hàng
+
+Chạy chương trình bằng lệnh:
 
 ```bash
 python scripts/customer_clustering.py
 ```
 
-Có thể chỉ định dataset và thư mục output:
+Có thể chỉ định rõ tệp dữ liệu đầu vào và thư mục lưu kết quả:
 
 ```bash
 python scripts/customer_clustering.py --data data/raw/Mall_Customers.csv --output outputs
 ```
 
-Sau khi chạy, kiểm tra:
-- `outputs/metrics/data_quality.csv`
-- `outputs/metrics/clustering_comparison.csv`
-- `outputs/metrics/cluster_profiles.csv`
-- `outputs/metrics/run_summary.json`
-- `outputs/customer_segments.csv`
-- `outputs/figures/`
+Sau khi chương trình chạy xong, kiểm tra các kết quả:
 
-## 4. Chạy Image Segmentation
+- `outputs/metrics/data_quality.csv`: thống kê dữ liệu thiếu và giá trị ngoại lệ.
+- `outputs/metrics/clustering_comparison.csv`: bảng so sánh các cấu hình phân cụm.
+- `outputs/metrics/cluster_profiles.csv`: thống kê đặc điểm trung bình của từng nhóm.
+- `outputs/metrics/run_summary.json`: kết quả tổng hợp của lần chạy.
+- `outputs/customer_segments.csv`: dữ liệu khách hàng kèm nhãn nhóm.
+- `outputs/figures/`: các biểu đồ phân tích và trực quan hóa.
 
-Chạy ảnh mẫu với K mặc định:
+## 4. Thực thi phần phân đoạn ảnh
+
+Chạy ảnh mẫu với số nhóm mặc định:
 
 ```bash
 python scripts/image_segmentation.py
 ```
 
-Thử nhiều giá trị K:
+Thử nghiệm với các số nhóm khác nhau:
 
 ```bash
 python scripts/image_segmentation.py --k 3
@@ -69,39 +81,43 @@ python scripts/image_segmentation.py --k 5
 python scripts/image_segmentation.py --k 8
 ```
 
-Dùng ảnh riêng:
+Sử dụng ảnh riêng:
 
 ```bash
 python scripts/image_segmentation.py --image data/raw/my_image.jpg --k 5
 ```
 
-Kết quả nằm trong `outputs/segmented_images/`.
+Kết quả được lưu trong thư mục `outputs/segmented_images/`.
 
-## 5. Chạy kiểm thử
+## 5. Chạy kiểm thử chương trình
+
+Thực hiện lệnh:
 
 ```bash
 pytest -q
 ```
 
-Kết quả kiểm thử phải được ghi nhận theo lần chạy thực tế; không dùng kết quả cũ để khẳng định lần chạy hiện tại đã thành công.
+Cần ghi nhận kết quả kiểm thử của lần chạy thực tế trên phiên bản mã nguồn cuối cùng. Không sử dụng kết quả của lần chạy cũ để khẳng định phiên bản hiện tại đã kiểm thử thành công.
 
-## 6. Chạy Flask dashboard
+## 6. Khởi chạy giao diện minh họa bằng Flask
 
-Trước tiên cần chạy hai script để sinh dữ liệu và hình ảnh đầu ra. Sau đó:
+Trước khi mở giao diện, cần chạy các chương trình phân nhóm khách hàng và phân đoạn ảnh để tạo dữ liệu, biểu đồ và ảnh kết quả.
+
+Khởi chạy ứng dụng:
 
 ```bash
 python app.py
 ```
 
-Mở địa chỉ:
+Mở trình duyệt tại địa chỉ:
 
 ```text
 http://127.0.0.1:5000
 ```
 
-Trong GitHub Codespaces, mở tab Ports và truy cập cổng 5000 được chuyển tiếp.
+Nếu sử dụng GitHub Codespaces, mở mục **Ports (Cổng)** và truy cập cổng 5000 đã được chuyển tiếp.
 
-## 7. Thứ tự chạy khuyến nghị
+## 7. Thứ tự thực hiện được đề xuất
 
 ```bash
 pip install -r requirements.txt
@@ -113,4 +129,4 @@ python scripts/image_segmentation.py --k 8
 python app.py
 ```
 
-**Lưu ý:** thư mục `outputs/` được tạo trong quá trình chạy và có thể bị loại khỏi Git theo `.gitignore`. Nếu dashboard chưa hiển thị biểu đồ, hãy chạy các script tạo output trước.
+**Lưu ý:** thư mục `outputs/` được tạo ra trong quá trình chạy chương trình và có thể được loại khỏi Git theo cấu hình trong `.gitignore`. Nếu giao diện chưa hiển thị biểu đồ hoặc ảnh, hãy chạy các chương trình tạo kết quả trước.
