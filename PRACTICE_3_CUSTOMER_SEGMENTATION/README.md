@@ -160,3 +160,11 @@ Bộ dữ liệu Mall Customers 200 dòng được lấy từ [geekquad/AlgoBook
 - Scikit-learn – DBSCAN: https://scikit-learn.org/stable/modules/clustering.html#dbscan
 - Scikit-learn – Silhouette Coefficient: https://scikit-learn.org/stable/modules/clustering.html#silhouette-coefficient
 - Scikit-image – Sample data: https://scikit-image.org/docs/stable/api/skimage.data.html
+
+
+## Tài liệu trong thư mục docs
+
+- [Mô tả bài thực hành](docs/PROJECT_DESCRIPTION.md)
+- [Tài liệu dataset](docs/DATASET_DOCUMENTATION.md)
+- [Hướng dẫn thực thi](docs/EXECUTION_GUIDE.md)
+- [Báo cáo kết quả](docs/RESULTS_REPORT.md)
