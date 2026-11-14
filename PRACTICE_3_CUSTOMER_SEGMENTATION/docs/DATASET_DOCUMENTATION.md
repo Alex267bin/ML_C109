@@ -1,80 +1,80 @@
-# Dataset Documentation – Mall Customer Segmentation
+# Tài liệu bộ dữ liệu – Phân nhóm khách hàng tại trung tâm thương mại
 
-## 1. Dataset overview
+## 1. Tổng quan bộ dữ liệu
 
-This practice uses the **Mall Customer Segmentation** dataset supplied as `Mall_Customers.csv`.
+Bài thực hành sử dụng bộ dữ liệu **Mall Customer Segmentation** trong tệp `Mall_Customers.csv`.
 
-- Number of records: **200 customers**
-- Number of columns: **5**
-- File format: CSV
-- Data type: tabular customer-demographic and spending data
-- Intended task: unsupervised customer segmentation
+- Số bản ghi: **200 khách hàng**
+- Số cột: **5**
+- Định dạng: CSV
+- Loại dữ liệu: thông tin nhân khẩu học và mức chi tiêu của khách hàng
+- Mục đích: phân nhóm khách hàng bằng phương pháp học không giám sát.
 
-> **Source/provenance note:** The CSV was supplied to the project workspace by the student. Its structure matches the commonly circulated Mall Customer Segmentation dataset. However, the original Kaggle page, dataset owner, version, and license were not included with the uploaded file, so this document does not claim a verified Kaggle URL or license. Add the exact Kaggle dataset URL and license here if available.
+> **Thông tin về nguồn dữ liệu:** Tệp CSV được người học cung cấp cho thư mục dự án. Cấu trúc của tệp tương đồng với bộ dữ liệu Mall Customer Segmentation thường được chia sẻ. Tuy nhiên, tệp được cung cấp không kèm trang Kaggle gốc, tên chủ sở hữu, phiên bản hoặc giấy phép sử dụng. Vì vậy, tài liệu này không khẳng định đường dẫn Kaggle hay giấy phép đã được xác minh. Nếu có đường dẫn Kaggle chính xác, hãy bổ sung tại đây.
 
-## 2. Data dictionary
+## 2. Từ điển dữ liệu
 
-| Column | Meaning | Type | Use in this practice |
+| Tên cột | Ý nghĩa | Kiểu dữ liệu | Cách sử dụng |
 |---|---|---|---|
-| `CustomerID` | Unique customer identifier | Integer | Identification only; excluded from clustering |
-| `Genre` | Customer gender category (Male/Female) | Categorical | Optional descriptive analysis; excluded from distance calculation |
-| `Age` | Customer age in years | Integer | Clustering feature |
-| `Annual_Income_(k$)` | Annual income in thousand US dollars | Integer | Clustering feature |
-| `Spending_Score` | Spending score on a scale from 1 to 100 | Integer | Clustering feature |
+| `CustomerID` | Mã định danh duy nhất của khách hàng | Số nguyên | Chỉ dùng để nhận diện, không dùng để phân cụm |
+| `Genre` | Giới tính khách hàng (Nam/Nữ) | Phân loại | Có thể dùng để mô tả kết quả, không dùng để tính khoảng cách |
+| `Age` | Tuổi khách hàng, tính theo năm | Số nguyên | Đặc trưng phân cụm |
+| `Annual_Income_(k$)` | Thu nhập hằng năm, tính theo nghìn đô la Mỹ | Số nguyên | Đặc trưng phân cụm |
+| `Spending_Score` | Điểm chi tiêu trên thang từ 1 đến 100 | Số nguyên | Đặc trưng phân cụm |
 
-The three clustering features are Age, Annual Income, and Spending Score. `CustomerID` is an identifier and must not be treated as a meaningful numeric feature.
+Ba đặc trưng được sử dụng để phân cụm là tuổi, thu nhập hằng năm và điểm chi tiêu. Không sử dụng `CustomerID` vì đây chỉ là mã định danh, không mang ý nghĩa định lượng cho bài toán.
 
-## 3. Dataset validation
+## 3. Kiểm tra và xác thực dữ liệu
 
-The supplied file was inspected before being documented.
+Tệp dữ liệu được kiểm tra trước khi đưa vào phân tích.
 
-| Check | Result |
+| Nội dung kiểm tra | Kết quả |
 |---|---:|
-| Rows | 200 |
-| Columns | 5 |
-| Missing values | 0 |
-| Duplicate rows | 0 |
-| Duplicate CustomerID values | 0 |
-| Age range | 18–70 |
-| Annual income range | 15–137 (k$) |
-| Spending score range | 1–99 |
+| Số dòng | 200 |
+| Số cột | 5 |
+| Giá trị bị thiếu | 0 |
+| Dòng trùng lặp | 0 |
+| Mã khách hàng trùng lặp | 0 |
+| Khoảng tuổi | 18–70 |
+| Khoảng thu nhập hằng năm | 15–137 (nghìn USD) |
+| Khoảng điểm chi tiêu | 1–99 |
 
-Descriptive statistics for the three numeric clustering features:
+### Thống kê mô tả
 
-| Feature | Mean | Standard deviation | Minimum | Median | Maximum |
+| Đặc trưng | Giá trị trung bình | Độ lệch chuẩn | Nhỏ nhất | Trung vị | Lớn nhất |
 |---|---:|---:|---:|---:|---:|
-| Age | 38.85 | 13.97 | 18 | 36 | 70 |
-| Annual Income (k$) | 60.56 | 26.26 | 15 | 61.5 | 137 |
-| Spending Score | 50.20 | 25.82 | 1 | 50 | 99 |
+| Tuổi | 38.85 | 13.97 | 18 | 36 | 70 |
+| Thu nhập hằng năm (nghìn USD) | 60.56 | 26.26 | 15 | 61.5 | 137 |
+| Điểm chi tiêu | 50.20 | 25.82 | 1 | 50 | 99 |
 
-These values describe the supplied CSV file. They are not model performance metrics.
+Các giá trị trên mô tả tệp CSV được cung cấp, không phải chỉ số đánh giá mô hình.
 
-## 4. Preprocessing and feature selection
+## 4. Tiền xử lý và lựa chọn đặc trưng
 
-1. Load the CSV with pandas.
-2. Normalize column names in the processing script where necessary (for example, `Genre` may be mapped to `Gender` internally).
-3. Check missing values and inspect outliers using the IQR method.
-4. Select `Age`, `Annual_Income_(k$)`, and `Spending_Score` as the feature matrix.
-5. Apply `StandardScaler` before distance-based clustering.
-6. Keep `CustomerID` and `Genre` out of the clustering feature matrix. They may be used for record identification and post-clustering descriptions only.
+1. Đọc dữ liệu CSV bằng thư viện Pandas.
+2. Chuẩn hóa tên cột trong chương trình khi cần thiết; ví dụ, cột `Genre` có thể được đổi tên nội bộ thành `Gender`.
+3. Kiểm tra giá trị thiếu và khảo sát giá trị ngoại lệ bằng phương pháp khoảng tứ phân vị (IQR).
+4. Chọn ba cột `Age`, `Annual_Income_(k$)` và `Spending_Score` làm ma trận đặc trưng.
+5. Sử dụng `StandardScaler` để chuẩn hóa dữ liệu trước khi áp dụng các thuật toán dựa trên khoảng cách.
+6. Không đưa `CustomerID` và `Genre` vào ma trận đặc trưng phân cụm. Hai cột này chỉ phục vụ nhận diện bản ghi hoặc mô tả cụm sau khi phân nhóm.
 
-## 5. How to use the file
+## 5. Cách sử dụng tệp dữ liệu
 
-Place the dataset at:
+Đặt tệp tại đường dẫn:
 
 ```text
 data/raw/Mall_Customers.csv
 ```
 
-Run the customer clustering pipeline from the Practice 3 directory:
+Chạy chương trình phân cụm từ thư mục Practice 3:
 
 ```bash
 python scripts/customer_clustering.py --data data/raw/Mall_Customers.csv --output outputs
 ```
 
-## 6. Limitations
+## 6. Giới hạn của bộ dữ liệu
 
-- This dataset contains only 200 customer records; results should not be generalized to all mall customers.
-- The dataset documentation supplied here does not establish how or when the data was collected.
-- The meaning and construction of the Spending Score are not further defined by the CSV itself.
-- The uploaded file alone does not provide a verified Kaggle source URL or reuse license. Cite the original Kaggle dataset page and follow its license if the course requires formal source attribution.
+- Bộ dữ liệu chỉ có 200 bản ghi, vì vậy không nên khái quát kết quả cho toàn bộ khách hàng của mọi trung tâm thương mại.
+- Tài liệu đi kèm không xác định cách thức và thời điểm thu thập dữ liệu.
+- Ý nghĩa và cách xây dựng chỉ số Spending Score không được giải thích thêm trong tệp CSV.
+- Tệp được cung cấp không có đường dẫn nguồn Kaggle hoặc giấy phép tái sử dụng đã được xác minh. Nếu môn học yêu cầu trích dẫn nguồn chính thức, cần bổ sung trang dữ liệu gốc và tuân thủ giấy phép tương ứng.
