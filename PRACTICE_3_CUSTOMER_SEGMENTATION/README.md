@@ -100,6 +100,46 @@ python scripts/image_segmentation.py --image data/raw/my_image.jpg --k 8 --max-s
 
 Đầu ra nằm trong \`outputs/segmented_images/\`.
 
+
+## 6. Demo giao diện Flask (theo format Practice 2)
+
+Demo hiển thị kết quả thực tế được sinh ra từ hai script, không tự tạo số liệu minh họa.
+
+### Chạy demo
+
+Cài thêm Flask cùng các thư viện còn lại:
+
+```bash
+pip install -r requirements.txt
+```
+
+Sinh kết quả phân cụm khách hàng và ảnh với K = 3, 5, 8:
+
+```bash
+python scripts/customer_clustering.py
+python scripts/image_segmentation.py --k 3
+python scripts/image_segmentation.py --k 5
+python scripts/image_segmentation.py --k 8
+```
+
+Khởi động website:
+
+```bash
+python app.py
+```
+
+Mở trình duyệt tại `http://127.0.0.1:5000`.
+
+### Thành phần demo
+
+- `app.py`: Flask routes và đọc kết quả từ thư mục outputs.
+- `templates/index.html`: dashboard Customer Segmentation và Image Segmentation.
+- `static/css/style.css`: giao diện responsive theo phong cách Practice 2.
+- `static/js/app.js`: xử lý tương tác phía trình duyệt.
+- `/api/dashboard`: API trả về summary, cluster profiles và bảng so sánh thuật toán.
+
+Lưu ý: thư mục `outputs/` được tạo khi chạy các script và không cần commit lên Git. Hãy chạy pipeline trước khi mở demo để website có dữ liệu và hình ảnh hiển thị.
+
 ## 6. Nguồn dữ liệu
 
 Bộ dữ liệu Mall Customers 200 dòng được lấy từ [geekquad/AlgoBook – Mall_Customers.csv](https://github.com/geekquad/AlgoBook/blob/35a2510f25faf077023b71c74236a498af53497d/ml/KMeans/Mall_Customers.csv). Dữ liệu gồm CustomerID, Genre, Age, Annual Income và Spending Score.
