@@ -31,6 +31,8 @@ pip install -r requirements.txt
 
 ### Dataset
 
+Tài liệu mô tả dataset và data dictionary nằm tại `docs/DATASET_DOCUMENTATION.md`. File `data/raw/Mall_Customers.csv` gồm 200 dòng và 5 cột, đã được kiểm tra không có missing values hoặc duplicate rows.
+
 Dữ liệu cần có ba cột số:
 - \`Age\`
 - \`Annual Income (k$)\`
