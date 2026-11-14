@@ -28,6 +28,7 @@ def load_customer_data(path: Path) -> pd.DataFrame:
         "annual income": "Annual Income (k$)",
         "spending score (1-100)": "Spending Score (1-100)",
         "spending score": "Spending Score (1-100)",
+        "genre": "Gender",
     }
     rename = {original: aliases[key] for key, original in normalized.items() if key in aliases}
     df = df.rename(columns=rename)
@@ -94,8 +95,11 @@ def run_clustering(data_path: Path, output_dir: Path) -> dict:
         valid = labels != -1
         n_clusters = len(set(labels[valid]))
         if n_clusters >= 2 and valid.sum() > n_clusters:
+            n_noise = int((~valid).sum())
             scores.append({"algorithm": "DBSCAN", "parameters": f"eps={eps}, min_samples=5",
-                           "n_clusters": n_clusters,
+                           "n_clusters": n_clusters, "noise_points": n_noise,
+                           "noise_ratio": round(n_noise / len(df), 4),
+                           "evaluated_points": int(valid.sum()),
                            "silhouette": float(silhouette_score(X[valid], labels[valid])), "inertia": np.nan})
     for k in (2, 3, 4, 5):
         if k < len(df):
@@ -147,7 +151,7 @@ def run_clustering(data_path: Path, output_dir: Path) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run customer segmentation experiments.")
-    parser.add_argument("--data", type=Path, default=Path("data/raw/Mall_Customers_sample.csv"))
+    parser.add_argument("--data", type=Path, default=Path("data/raw/Mall_Customers.csv"))
     parser.add_argument("--output", type=Path, default=Path("outputs"))
     args = parser.parse_args()
     print(run_clustering(args.data, args.output))
