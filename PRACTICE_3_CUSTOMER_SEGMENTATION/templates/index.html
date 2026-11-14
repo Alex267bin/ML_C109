@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SEGMENTA | Customer Analytics</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/"><span class="brand-mark">S</span><span>SEGMENTA<span class="brand-sub">CUSTOMER ANALYTICS LAB</span></span></a>
+    <span class="status"><i></i> BẢN CHẠY CỤC BỘ</span>
+  </header>
+
+  <main class="layout">
+    <section class="hero">
+      <div class="eyebrow">HỌC MÁY · BÀI THỰC HÀNH 03</div>
+      <h1>Customer <em>Segmentation</em></h1>
+      <p>Khám phá nhóm khách hàng bằng các thuật toán phân cụm và trực quan hóa cách K-Means đơn giản hóa màu sắc trong ảnh.</p>
+      <div class="hero-note"><span>✦</span> Dashboard đọc kết quả trực tiếp từ các tệp output của chương trình Python.</div>
+    </section>
+
+    {% if missing %}
+    <div class="notice warning">
+      <strong>Chưa tìm thấy đầy đủ kết quả.</strong>
+      <p>Hãy chạy pipeline trước khi mở demo:</p>
+      <code>python scripts/customer_clustering.py</code>
+      <code>python scripts/image_segmentation.py --k 3</code>
+      <code>python scripts/image_segmentation.py --k 5</code>
+      <code>python scripts/image_segmentation.py --k 8</code>
+      <small>Đang thiếu: {{ missing | join(', ') }}</small>
+    </div>
+    {% endif %}
+
+    <section class="section-heading">
+      <div><span class="step">01 / CUSTOMER CLUSTERING</span><h2>Tổng quan phân cụm khách hàng</h2></div>
+      <span class="section-icon">◉</span>
+    </section>
+
+    <section class="metric-grid">
+      <article class="metric-card"><span>SỐ KHÁCH HÀNG</span><strong>{{ summary.get('rows_used', '—') }}</strong><small>Bản ghi được sử dụng</small></article>
+      <article class="metric-card"><span>K-MEANS TỐT NHẤT</span><strong>{% if summary %}K = {{ summary.get('best_kmeans_k', '—') }}{% else %}—{% endif %}</strong><small>Trong các giá trị K đã thử</small></article>
+      <article class="metric-card"><span>SILHOUETTE K-MEANS</span><strong>{{ summary.get('best_kmeans_silhouette', '—') }}</strong><small>Điểm càng cao thường càng tốt</small></article>
+      <article class="metric-card"><span>THUẬT TOÁN ĐỨNG ĐẦU</span><strong class="algorithm">{{ summary.get('best_overall_algorithm', '—') }}</strong><small>Silhouette: {{ summary.get('best_overall_silhouette', '—') }}</small></article>
+    </section>
+
+    <section class="analysis-grid">
+      <article class="panel">
+        <div class="panel-heading"><div><span class="step">02 / VISUALIZATION</span><h2>Bản đồ cụm khách hàng</h2></div><span class="result-chip">PCA · 2D</span></div>
+        {% if 'figures/customer_clusters_pca.png' in [] %}{% endif %}
+        <img class="figure" src="/outputs/figures/customer_clusters_pca.png" alt="Biểu đồ PCA các cụm khách hàng" onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+        <div class="figure-empty" hidden>Chưa có biểu đồ. Hãy chạy customer_clustering.py.</div>
+        <p class="caption">PCA đưa dữ liệu ba chiều xuống hai chiều để trực quan hóa. Việc phân cụm vẫn được thực hiện trên ba đặc trưng đã chuẩn hóa.</p>
+      </article>
+      <article class="panel">
+        <div class="panel-heading"><div><span class="step">03 / CLUSTER PROFILE</span><h2>Đặc điểm từng nhóm</h2></div><span class="result-chip">K-MEANS</span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Cluster</th><th>Age</th><th>Income</th><th>Spending</th><th>Count</th></tr></thead>
+            <tbody>
+            {% for row in profiles %}
+              <tr><td><span class="cluster-dot">●</span> {{ row.get('Cluster', '') }}</td><td>{{ row.get('Age', '—') }}</td><td>{{ row.get('Annual Income (k$)', '—') }}</td><td>{{ row.get('Spending Score (1-100)', '—') }}</td><td>{{ row.get('Customer Count', '—') }}</td></tr>
+            {% else %}
+              <tr><td colspan="5" class="empty-cell">Chưa có dữ liệu hồ sơ cụm.</td></tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <p class="caption">Income là thu nhập năm (nghìn USD); Spending Score là điểm chi tiêu từ 1 đến 100.</p>
+      </article>
+    </section>
+
+    <section class="panel comparison-panel">
+      <div class="panel-heading"><div><span class="step">04 / MODEL EVALUATION</span><h2>So sánh thuật toán phân cụm</h2></div><span class="result-chip">SILHOUETTE SCORE</span></div>
+      <div class="table-wrap">
+        <table class="wide-table">
+          <thead><tr><th>Algorithm</th><th>Parameters</th><th>Clusters</th><th>Silhouette</th><th>Noise points</th><th>Evaluated points</th></tr></thead>
+          <tbody>
+          {% for row in comparison %}
+            <tr><td>{{ row.get('algorithm', '') }}</td><td>{{ row.get('parameters', '') }}</td><td>{{ row.get('n_clusters', '') }}</td><td>{{ '%.4f'|format(row.get('silhouette')|float) if row.get('silhouette') != '' else 'N/A' }}</td><td>{{ row.get('noise_points', '') }}</td><td>{{ row.get('evaluated_points', '') }}</td></tr>
+          {% else %}
+            <tr><td colspan="6" class="empty-cell">Chưa có bảng so sánh. Hãy chạy customer_clustering.py.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <p class="caption">DBSCAN có thể loại các điểm nhiễu khi tính Silhouette. Vì vậy cần đọc điểm số cùng tỷ lệ noise và số điểm được đánh giá.</p>
+    </section>
+
+    <section class="section-heading image-heading">
+      <div><span class="step">05 / K-MEANS IMAGE SEGMENTATION</span><h2>Phân đoạn ảnh theo màu RGB</h2></div>
+      <span class="section-icon">▧</span>
+    </section>
+    <section class="panel image-panel">
+      <div class="image-controls">
+        <div><h2>Thay đổi số cụm K</h2><p>Chọn K để xem ảnh được tái tạo bằng số màu đại diện khác nhau.</p></div>
+        <div class="k-options">
+          {% for k in [3, 5, 8] %}
+          <a class="k-button {% if selected_k == k %}active{% endif %}" href="/?k={{ k }}">K = {{ k }}</a>
+          {% endfor %}
+        </div>
+      </div>
+      {% if image_exists %}
+      <img class="segmentation-image" src="/outputs/segmented_images/comparison_k{{ selected_k }}.png" alt="So sánh ảnh gốc và ảnh phân đoạn với K={{ selected_k }}">
+      {% else %}
+      <div class="figure-empty">Chưa có ảnh kết quả cho K={{ selected_k }}. Hãy chạy lệnh image_segmentation.py tương ứng.</div>
+      {% endif %}
+      <div class="image-explanation">
+        <div><strong>K = 3</strong><span>Ít màu đại diện, ảnh đơn giản hóa mạnh.</span></div>
+        <div><strong>K = 5</strong><span>Cân bằng giữa giảm màu và giữ sắc thái.</span></div>
+        <div><strong>K = 8</strong><span>Nhiều màu đại diện, giữ nhiều biến thiên màu hơn.</span></div>
+      </div>
+      <p class="caption">Mỗi pixel được biểu diễn bằng vector RGB và gán vào centroid gần nhất. Pixel sau đó được thay bằng màu của centroid tương ứng.</p>
+    </section>
+
+    <section class="bottom-grid">
+      <article class="info-card"><span class="info-icon">◎</span><div><h3>Unsupervised Learning</h3><p>Không cần nhãn mục tiêu; thuật toán tìm cấu trúc nhóm từ dữ liệu.</p></div></article>
+      <article class="info-card"><span class="info-icon">⌁</span><div><h3>Feature Scaling</h3><p>StandardScaler đưa Age, Income và Spending Score về thang đo tương đương.</p></div></article>
+      <article class="info-card"><span class="info-icon">▦</span><div><h3>Image Compression</h3><p>K-Means thay nhiều màu gốc bằng K màu đại diện từ các centroid.</p></div></article>
+    </section>
+    <footer>SEGMENTA – CUSTOMER ANALYTICS <span>·</span> MACHINE LEARNING PRACTICE 03</footer>
+  </main>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
