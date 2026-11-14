@@ -9,7 +9,7 @@ Bài thực hành gồm **hai phần độc lập**:
 
 ## 2. Cấu trúc
 
-- \`data/raw/Mall_Customers_sample.csv\`: dữ liệu mẫu nhỏ để kiểm tra pipeline. Có thể thay bằng bộ Mall Customers đầy đủ.
+- \`data/raw/Mall_Customers.csv\`: dữ liệu mẫu nhỏ để kiểm tra pipeline. Có thể thay bằng bộ Mall Customers đầy đủ.
 - \`scripts/customer_clustering.py\`: EDA, scaling, thử K-Means/DBSCAN/Agglomerative, silhouette, hồ sơ cụm.
 - \`scripts/image_segmentation.py\`: phân đoạn ảnh bằng K-Means trong không gian màu RGB.
 - \`outputs/metrics/\`: báo cáo chất lượng dữ liệu, so sánh thuật toán và hồ sơ cụm.
@@ -54,7 +54,7 @@ python scripts/customer_clustering.py --data data/raw/Mall_Customers.csv --outpu
 2. Vẽ histogram và scatter plot để quan sát phân phối và quan hệ giữa các đặc trưng.
 3. Dùng StandardScaler để đưa Age, Annual Income và Spending Score về thang đo tương đương.
 4. Thử K-Means với K từ 2 đến 10; thử DBSCAN với nhiều eps; thử Agglomerative với K từ 2 đến 5.
-5. So sánh Silhouette Coefficient. Với DBSCAN, điểm silhouette được tính trên các điểm không bị gán nhãn noise.
+5. So sánh Silhouette Coefficient. Với DBSCAN, điểm silhouette được tính trên các điểm không bị gán nhãn noise. Bảng so sánh đồng thời ghi `noise_points`, `noise_ratio` và `evaluated_points` để thể hiện rõ mức độ bao phủ của kết quả.
 6. Chọn K-Means có silhouette cao nhất trong nhóm K-Means làm mô hình phân cụm cuối cùng; trực quan hóa bằng PCA 2D và lập hồ sơ cụm.
 
 **Lưu ý đánh giá:** Silhouette càng gần 1 thường biểu thị cụm càng tách biệt; gần 0 biểu thị các cụm chồng lấn; giá trị âm có thể cho thấy điểm được gán vào cụm chưa phù hợp. Silhouette chỉ được tính khi có ít nhất hai cụm hợp lệ.
@@ -100,7 +100,11 @@ python scripts/image_segmentation.py --image data/raw/my_image.jpg --k 8 --max-s
 
 Đầu ra nằm trong \`outputs/segmented_images/\`.
 
-## 6. Ghi chú khi báo cáo
+## 6. Nguồn dữ liệu
+
+Bộ dữ liệu Mall Customers 200 dòng được lấy từ [geekquad/AlgoBook – Mall_Customers.csv](https://github.com/geekquad/AlgoBook/blob/35a2510f25faf077023b71c74236a498af53497d/ml/KMeans/Mall_Customers.csv). Dữ liệu gồm CustomerID, Genre, Age, Annual Income và Spending Score.
+
+## 7. Ghi chú khi báo cáo
 
 - Clustering là học không giám sát: không có nhãn mục tiêu được cung cấp trước.
 - Scaling quan trọng vì K-Means và các thuật toán dựa trên khoảng cách nhạy với đơn vị đo.
@@ -108,7 +112,7 @@ python scripts/image_segmentation.py --image data/raw/my_image.jpg --k 8 --max-s
 - PCA chỉ giảm dữ liệu xuống hai chiều để trực quan hóa, không thay thế dữ liệu ba chiều dùng để huấn luyện clustering.
 - Image segmentation trong bài này phân cụm theo màu RGB, không hiểu ngữ nghĩa đối tượng trong ảnh.
 
-## 7. Tài liệu tham khảo
+## 8. Tài liệu tham khảo
 
 - Scikit-learn – K-Means: https://scikit-learn.org/stable/modules/clustering.html#k-means
 - Scikit-learn – DBSCAN: https://scikit-learn.org/stable/modules/clustering.html#dbscan
