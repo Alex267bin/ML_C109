@@ -48,7 +48,7 @@ def run_clustering(data_path: Path, output_dir: Path) -> dict:
 
     df = load_customer_data(data_path)
     report = pd.DataFrame({
-        "missing_values": df.isna().sum(),
+        "missing_values": df[FEATURES].isna().sum(),
         "outlier_count_IQR": [
             int(((df[c] < df[c].quantile(.25) - 1.5 * (df[c].quantile(.75)-df[c].quantile(.25))) |
                  (df[c] > df[c].quantile(.75) + 1.5 * (df[c].quantile(.75)-df[c].quantile(.25)))).sum())
