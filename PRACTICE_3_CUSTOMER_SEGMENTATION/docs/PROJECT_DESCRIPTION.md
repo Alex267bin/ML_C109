@@ -1,63 +1,71 @@
-# Mô tả Practice 3 – Customer Segmentation & Image Segmentation
+# Mô tả bài thực hành 3 – Phân nhóm khách hàng và phân đoạn ảnh bằng K-Means
 
 ## 1. Tổng quan
 
-Practice 3 gồm hai nội dung thực hành độc lập sử dụng thuật toán K-Means và các phương pháp phân cụm:
+Bài thực hành 3 gồm hai nội dung độc lập, tập trung vào thuật toán K-Means và các phương pháp phân cụm:
 
-1. **Customer Segmentation:** phân nhóm khách hàng dựa trên độ tuổi, thu nhập hằng năm và điểm chi tiêu.
-2. **K-Means Image Segmentation:** phân nhóm pixel dựa trên màu RGB để tạo ảnh có số lượng màu đại diện ít hơn.
+1. **Phân nhóm khách hàng:** chia khách hàng thành các nhóm dựa trên độ tuổi, thu nhập hằng năm và điểm chi tiêu.
+2. **Phân đoạn ảnh bằng K-Means:** nhóm các điểm ảnh theo màu RGB để tạo ra ảnh có số lượng màu đại diện ít hơn.
 
-Mục tiêu là thực hành quy trình xử lý dữ liệu, khám phá dữ liệu (EDA), chuẩn hóa đặc trưng, huấn luyện thuật toán clustering, đánh giá kết quả và trực quan hóa.
+Mục tiêu là thực hành quy trình xử lý dữ liệu, phân tích khám phá dữ liệu, chuẩn hóa đặc trưng, xây dựng mô hình phân cụm, đánh giá kết quả và trực quan hóa.
 
-## 2. Phần 1 – Customer Segmentation
+## 2. Phần 1 – Phân nhóm khách hàng
 
-### Input
-- File: `data/raw/Mall_Customers.csv`
-- Các đặc trưng dùng để phân cụm:
+### Dữ liệu đầu vào
+
+- Tệp dữ liệu: `data/raw/Mall_Customers.csv`.
+- Ba đặc trưng được sử dụng:
   - `Age`: tuổi khách hàng.
-  - `Annual Income (k$)`: thu nhập hằng năm (nghìn USD).
+  - `Annual Income (k$)`: thu nhập hằng năm, tính theo nghìn USD.
   - `Spending Score (1-100)`: điểm chi tiêu.
-- `Gender` có thể được dùng để mô tả hồ sơ cụm, không được đưa vào vector đặc trưng phân cụm.
+- Cột `Gender` có thể được dùng để mô tả đặc điểm của từng nhóm, nhưng không đưa vào ma trận đặc trưng dùng để phân cụm.
 
-### Xử lý
-- Kiểm tra dữ liệu thiếu và ngoại lệ bằng IQR.
-- Khám phá phân phối và mối quan hệ giữa các đặc trưng bằng histogram và scatter plot.
-- Dùng StandardScaler để chuẩn hóa ba đặc trưng.
-- Thử K-Means, DBSCAN và Agglomerative Clustering.
-- Dùng Silhouette Coefficient để so sánh chất lượng phân cụm.
-- Dùng PCA giảm xuống hai chiều để trực quan hóa kết quả K-Means.
+### Quy trình xử lý
 
-### Output
-Các tệp CSV/JSON trong `outputs/metrics/`, dữ liệu khách hàng có nhãn cụm trong `outputs/customer_segments.csv`, cùng các biểu đồ trong `outputs/figures/`.
+- Kiểm tra dữ liệu thiếu và giá trị ngoại lệ bằng phương pháp IQR.
+- Khảo sát phân phối và mối quan hệ giữa các đặc trưng bằng biểu đồ histogram và biểu đồ phân tán.
+- Sử dụng `StandardScaler` để chuẩn hóa ba đặc trưng.
+- Thử nghiệm K-Means, DBSCAN và phân cụm phân cấp Agglomerative.
+- Sử dụng hệ số Silhouette để so sánh chất lượng phân cụm.
+- Sử dụng PCA để giảm dữ liệu xuống hai chiều nhằm trực quan hóa kết quả K-Means.
 
-## 3. Phần 2 – K-Means Image Segmentation
+### Kết quả đầu ra
 
-### Input
-Một ảnh màu bất kỳ; nếu không truyền đường dẫn ảnh, chương trình dùng ảnh mẫu astronaut có sẵn trong scikit-image.
+- Các tệp CSV/JSON trong `outputs/metrics/`.
+- Dữ liệu khách hàng kèm nhãn nhóm trong `outputs/customer_segments.csv`.
+- Các biểu đồ trong `outputs/figures/`.
 
-### Xử lý
-- Đọc ảnh và chuyển sang RGB.
-- Resize ảnh theo giới hạn kích thước.
-- Chuyển ảnh thành ma trận pixel, mỗi pixel có ba giá trị R, G, B.
-- K-Means gom các pixel thành K cụm.
-- Thay màu mỗi pixel bằng màu centroid của cụm tương ứng.
+## 3. Phần 2 – Phân đoạn ảnh bằng K-Means
 
-### Output
-- `outputs/segmented_images/segmented_kK.png`: ảnh sau phân đoạn.
-- `outputs/segmented_images/comparison_kK.png`: ảnh gốc và ảnh phân đoạn đặt cạnh nhau.
+### Dữ liệu đầu vào
 
-## 4. Công nghệ sử dụng
+Một ảnh màu bất kỳ. Nếu không truyền đường dẫn ảnh, chương trình sử dụng ảnh mẫu astronaut được cung cấp trong thư viện scikit-image.
 
-- Python
-- Pandas, NumPy
-- Matplotlib, Seaborn
-- Scikit-learn
-- Pillow, scikit-image
-- Flask cho dashboard minh họa kết quả
+### Quy trình xử lý
 
-## 5. Giới hạn
+- Đọc ảnh và chuyển ảnh về không gian màu RGB.
+- Thay đổi kích thước ảnh theo giới hạn đã thiết lập để giảm thời gian xử lý.
+- Chuyển ảnh thành ma trận điểm ảnh; mỗi điểm ảnh được biểu diễn bởi ba giá trị đỏ, xanh lá và xanh dương (R, G, B).
+- Sử dụng K-Means để chia các điểm ảnh thành K nhóm.
+- Thay màu của mỗi điểm ảnh bằng màu tâm cụm tương ứng.
 
-- Kết quả phân cụm phụ thuộc vào đặc trưng, cách chuẩn hóa và tham số.
-- Silhouette của DBSCAN được tính trên các điểm không bị gán nhãn noise; cần xem xét thêm tỷ lệ noise trước khi so sánh.
-- PCA phục vụ trực quan hóa, không phải dữ liệu đầu vào thay thế cho quá trình phân cụm.
-- Image segmentation chỉ gom pixel theo màu RGB, không nhận diện ngữ nghĩa hay ranh giới đối tượng.
+### Kết quả đầu ra
+
+- `outputs/segmented_images/segmented_kK.png`: ảnh sau khi phân đoạn.
+- `outputs/segmented_images/comparison_kK.png`: ảnh gốc và ảnh sau phân đoạn được đặt cạnh nhau để so sánh.
+
+## 4. Công nghệ và thư viện sử dụng
+
+- Python: ngôn ngữ lập trình chính.
+- Pandas, NumPy: xử lý dữ liệu và tính toán số học.
+- Matplotlib, Seaborn: trực quan hóa dữ liệu.
+- Scikit-learn: chuẩn hóa dữ liệu, xây dựng và đánh giá mô hình phân cụm.
+- Pillow, scikit-image: đọc, xử lý ảnh và cung cấp ảnh mẫu.
+- Flask: xây dựng giao diện trang web để trình bày kết quả.
+
+## 5. Giới hạn của bài thực hành
+
+- Kết quả phân cụm phụ thuộc vào đặc trưng đầu vào, phương pháp chuẩn hóa và tham số của thuật toán.
+- Điểm Silhouette của DBSCAN được tính trên các điểm không bị đánh dấu là nhiễu; cần xem xét thêm tỷ lệ điểm nhiễu khi so sánh.
+- PCA chỉ phục vụ trực quan hóa kết quả trên mặt phẳng hai chiều, không thay thế dữ liệu ba chiều được sử dụng để huấn luyện mô hình phân cụm.
+- Phân đoạn ảnh trong bài chỉ nhóm các điểm ảnh theo màu RGB, không nhận biết ý nghĩa của vật thể hoặc đối tượng trong ảnh.
