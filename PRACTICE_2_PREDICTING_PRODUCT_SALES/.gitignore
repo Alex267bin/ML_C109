@@ -9,3 +9,4 @@ outputs/*
 !outputs/.gitkeep
 models/saved_models/*
 !models/saved_models/.gitkeep
+store-sales-time-series-forecasting.zip
