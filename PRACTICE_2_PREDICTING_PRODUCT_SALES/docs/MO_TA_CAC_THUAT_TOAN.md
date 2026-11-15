@@ -162,3 +162,14 @@ Không import hoặc gọi API từ scikit-learn. MAE, MSE, RMSE cũng được 
 - `models/preprocessing.py`: Tiền xử lý dữ liệu.
 - `models/metrics.py`: Tính MAE, MSE và RMSE.
 - `scripts/pipeline.py`: Điều phối tiền xử lý, huấn luyện, đánh giá và lưu mô hình.
+
+
+## 8. Cấu trúc mã nguồn mô hình
+
+- `models/algorithms/linear_regression.py`: Hồi quy tuyến tính.
+- `models/algorithms/decision_tree.py`: Cây quyết định hồi quy.
+- `models/algorithms/random_forest.py`: Rừng ngẫu nhiên.
+- `models/algorithms/gradient_boosting.py`: Tăng cường Gradient.
+- `models/preprocessing.py`: Tiền xử lý dữ liệu.
+- `models/metrics.py`: Tính MAE, MSE và RMSE.
+- `scripts/pipeline.py`: Điều phối toàn bộ quy trình.
