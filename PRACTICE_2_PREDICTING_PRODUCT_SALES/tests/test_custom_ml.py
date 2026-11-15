@@ -26,7 +26,7 @@ def test_preprocessor_handles_missing_and_unknown_categories():
 
 
 def test_linear_regression_learns_linear_relationship():
-    x = np.arange(30, dtype=float).reshape(-1, 1)
+    x = ((np.arange(30, dtype=float) - 14.5) / 8.7).reshape(-1, 1)
     y = 4.0 * x[:, 0] + 7.0
     model = LinearRegressionGD(learning_rate=0.05, epochs=100, batch_size=10)
     model.fit(x, y)
