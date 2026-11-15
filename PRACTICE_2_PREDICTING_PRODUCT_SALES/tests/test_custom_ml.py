@@ -37,7 +37,7 @@ def test_linear_regression_learns_linear_relationship():
 def test_decision_tree_learns_simple_step():
     x = np.arange(40, dtype=float).reshape(-1, 1)
     y = (x[:, 0] > 19).astype(float) * 10
-    model = DecisionTreeRegressorCustom(max_depth=2, min_samples_leaf=2)
+    model = DecisionTreeRegressorCustom(max_depth=2, min_samples_leaf=2, max_thresholds=40)
     model.fit(x, y)
     assert np.mean(np.abs(model.predict(x) - y)) < 0.1
 
