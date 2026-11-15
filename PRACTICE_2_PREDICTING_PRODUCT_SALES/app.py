@@ -2,8 +2,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-import json
-
 import pickle
 import pandas as pd
 from flask import Flask, jsonify, render_template, request
@@ -91,7 +89,7 @@ def predict():
         if promotion < 0:
             raise ValueError("Số mặt hàng khuyến mãi không được âm.")
         prediction = prediction_row(store_nbr, family, date_value, promotion)
-        return jsonify({"prediction": prediction, "unit": "đơn vị sản phẩm", "model": bundle.get("model_name", "Mô hình tự huấn luyện")})
+        return jsonify({"prediction": prediction, "unit": "đơn vị sản phẩm", "model": "Mô hình tự huấn luyện"})
     except (KeyError, TypeError, ValueError) as exc:
         return jsonify({"error": str(exc)}), 400
     except FileNotFoundError as exc:
