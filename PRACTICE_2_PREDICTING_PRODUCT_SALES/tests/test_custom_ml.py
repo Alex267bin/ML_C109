@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
 
-from scripts.custom_ml import (
+from models.preprocessing import NumpyPreprocessor
+from models.metrics import regression_metrics
+from models.algorithms import (
     NumpyPreprocessor,
     LinearRegressionGD,
     DecisionTreeRegressorCustom,
