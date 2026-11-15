@@ -19,10 +19,10 @@ Trước khi huấn luyện, chương trình thực hiện:
 3. Tạo các đặc trưng thời gian: năm, tháng, ngày, thứ trong tuần, tuần trong năm và trạng thái cuối tuần.
 4. Chuyển doanh số thành kiểu số; chỉ giữ các dòng có doanh số hợp lệ và không âm.
 5. Chia đặc trưng thành hai nhóm:
-   - **Dữ liệu số:** thay giá trị thiếu bằng trung vị (`median`), sau đó chuẩn hóa bằng `StandardScaler`.
-   - **Dữ liệu phân loại:** thay giá trị thiếu bằng giá trị xuất hiện nhiều nhất (`most_frequent`), sau đó mã hóa One-Hot (`OneHotEncoder`). Giá trị phân loại chưa gặp khi huấn luyện được bỏ qua thay vì gây lỗi.
+   - **Dữ liệu số:** thay giá trị thiếu bằng trung vị (`median`), sau đó tự chuẩn hóa bằng trung bình và độ lệch chuẩn tính từ tập huấn luyện.
+   - **Dữ liệu phân loại:** thay giá trị thiếu bằng giá trị xuất hiện nhiều nhất (`most_frequent`), sau đó tự mã hóa One-Hot bằng NumPy. Giá trị phân loại chưa gặp khi huấn luyện được bỏ qua thay vì gây lỗi.
 
-Toàn bộ bước tiền xử lý được đóng gói trong `Pipeline` và `ColumnTransformer`, sau đó ghép với từng mô hình để bảo đảm các phép biến đổi được học từ tập huấn luyện.
+Các bước tiền xử lý được cài đặt trong `NumpyPreprocessor` tại `scripts/custom_ml.py`. Bộ tiền xử lý chỉ được fit trên tập huấn luyện rồi dùng nguyên tham số đó để biến đổi tập kiểm định.
 
 ## 3. Các thuật toán được sử dụng
 
@@ -33,7 +33,7 @@ Toàn bộ bước tiền xử lý được đóng gói trong `Pipeline` và `Co
 **Cách hoạt động:**
 1. Nhận các đặc trưng đã được tiền xử lý.
 2. Tìm hệ số cho từng đặc trưng và hệ số chặn.
-3. Chọn các hệ số sao cho tổng bình phương sai số giữa giá trị thực tế và giá trị dự đoán nhỏ nhất.
+3. Chọn các hệ số sao cho tổng bình phương sai số được giảm dần bằng Gradient Descent mini-batch; trọng số và bias được cập nhật theo gradient.
 4. Dùng phương trình đã học để dự đoán doanh số cho dữ liệu mới.
 
 **Đặc điểm:**
@@ -52,8 +52,8 @@ Toàn bộ bước tiền xử lý được đóng gói trong `Pipeline` và `Co
 4. Khi dự đoán, đi theo các điều kiện từ nút gốc đến nút lá và trả về giá trị của nút lá.
 
 **Tham số trong mã nguồn hiện tại:**
-- `max_depth=16`: giới hạn độ sâu tối đa của cây.
-- `min_samples_leaf=30`: mỗi nút lá phải có tối thiểu 30 mẫu.
+- `max_depth=12`: giới hạn độ sâu tối đa của cây.
+- `min_samples_leaf=50`: mỗi nút lá phải có tối thiểu 30 mẫu.
 - `random_state=42`: cố định yếu tố ngẫu nhiên để hỗ trợ tái lập kết quả.
 
 **Đặc điểm:**
@@ -72,11 +72,11 @@ Toàn bộ bước tiền xử lý được đóng gói trong `Pipeline` và `Co
 4. Lấy trung bình dự đoán của các cây để tạo kết quả cuối cùng cho bài toán hồi quy.
 
 **Tham số trong mã nguồn hiện tại:**
-- `n_estimators=60`: sử dụng 60 cây.
-- `max_depth=16`: giới hạn độ sâu mỗi cây.
-- `min_samples_leaf=10`: tối thiểu 10 mẫu tại mỗi nút lá.
-- `max_features=0.8`: mỗi phép chia xem xét tối đa 80% số đặc trưng.
-- `n_jobs=-1`: tận dụng các lõi xử lý có sẵn.
+- `n_estimators=12`: sử dụng 60 cây.
+- `max_depth=10`: giới hạn độ sâu mỗi cây.
+- `min_samples_leaf=50`: tối thiểu 10 mẫu tại mỗi nút lá.
+- chọn ngẫu nhiên một số đặc trưng tại mỗi nút: mỗi phép chia xem xét tối đa 80% số đặc trưng.
+- không sử dụng xử lý song song từ thư viện ML: tận dụng các lõi xử lý có sẵn.
 - `random_state=42`: cố định yếu tố ngẫu nhiên.
 
 **Đặc điểm:**
@@ -97,11 +97,11 @@ Toàn bộ bước tiền xử lý được đóng gói trong `Pipeline` và `Co
 6. Cộng đóng góp của các cây để tạo dự đoán cuối cùng.
 
 **Tham số trong mã nguồn hiện tại:**
-- `n_estimators=80`: xây dựng 80 cây theo tuần tự.
-- `learning_rate=0.08`: hệ số điều chỉnh mức đóng góp của mỗi cây.
-- `max_depth=3`: giới hạn độ sâu của từng cây.
-- `min_samples_leaf=30`: tối thiểu 30 mẫu tại nút lá.
-- `subsample=0.8`: mỗi giai đoạn sử dụng 80% mẫu huấn luyện.
+- `n_estimators=15`: xây dựng 80 cây theo tuần tự.
+- `learning_rate=0.05`: hệ số điều chỉnh mức đóng góp của mỗi cây.
+- `max_depth=2`: giới hạn độ sâu của từng cây.
+- `min_samples_leaf=50`: tối thiểu 30 mẫu tại nút lá.
+- huấn luyện trên tập mẫu đã lấy ngẫu nhiên: mỗi giai đoạn sử dụng 80% mẫu huấn luyện.
 - `random_state=42`: cố định yếu tố ngẫu nhiên.
 
 **Đặc điểm:**
@@ -130,7 +130,7 @@ Các chỉ số đánh giá:
 - **MSE (Mean Squared Error – Sai số bình phương trung bình):** trung bình bình phương sai số; phạt sai số lớn mạnh hơn MAE. Càng thấp càng tốt.
 - **RMSE (Root Mean Squared Error – Căn bậc hai sai số bình phương trung bình):** căn bậc hai của MSE, có cùng đơn vị với doanh số. Càng thấp càng tốt.
 
-Mã nguồn sắp xếp bảng so sánh theo RMSE tăng dần và chọn mô hình đứng đầu làm mô hình tốt nhất. Việc chọn mô hình chỉ dựa trên tập kiểm định, không sử dụng tập kiểm tra cuối cùng để lựa chọn.
+Mã nguồn tự tính MAE, MSE và RMSE bằng NumPy, sắp xếp bảng theo RMSE tăng dần và chọn mô hình đứng đầu làm mô hình tốt nhất. Việc chọn mô hình chỉ dựa trên tập kiểm định, không sử dụng tập kiểm tra cuối cùng để lựa chọn.
 
 ## 6. Giới hạn và lưu ý khi diễn giải
 
@@ -138,3 +138,16 @@ Mã nguồn sắp xếp bảng so sánh theo RMSE tăng dần và chọn mô hì
 - Quy trình hiện tại không đưa doanh số trễ (lag) hoặc trung bình trượt vào đặc trưng.
 - Kết quả đánh giá phản ánh dữ liệu, cách chia thời gian và cấu hình tham số đang dùng; không bảo đảm chất lượng tương tự trên mọi giai đoạn hoặc cửa hàng.
 - Các tham số trong tài liệu này được đối chiếu theo mã nguồn `scripts/pipeline.py`. Nếu thay đổi cấu hình trong mã, cần cập nhật tài liệu tương ứng.
+
+
+## 7. Tự cài đặt và giới hạn thư viện
+
+Toàn bộ thuật toán được triển khai trong `scripts/custom_ml.py` bằng NumPy và Pandas:
+
+- `LinearRegressionGD`: cập nhật trọng số và bias bằng mini-batch Gradient Descent.
+- `DecisionTreeRegressorCustom`: chọn feature/ngưỡng chia làm giảm tổng bình phương sai số; giá trị lá là trung bình target.
+- `RandomForestRegressorCustom`: huấn luyện nhiều cây trên bootstrap sample và lấy trung bình dự đoán.
+- `GradientBoostingRegressorCustom`: huấn luyện cây tuần tự trên residual của mô hình hiện tại.
+- `NumpyPreprocessor`: điền giá trị thiếu, chuẩn hóa và One-Hot Encoding.
+
+Không import hoặc gọi API từ scikit-learn. MAE, MSE, RMSE cũng được tự tính bằng NumPy. Đây là phiên bản triển khai phục vụ học tập; các cấu hình cây được giới hạn để phù hợp tài nguyên máy và cần được đánh giá thực nghiệm trước khi kết luận mô hình tốt nhất.
