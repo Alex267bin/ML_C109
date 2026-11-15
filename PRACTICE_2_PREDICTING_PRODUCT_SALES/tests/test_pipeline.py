@@ -44,7 +44,8 @@ def test_chronological_split_never_splits_same_date():
     assert dates.iloc[X_train.index].max() < dates.iloc[X_valid.index].min()
 
 
-def test_evaluate_returns_three_metrics():
+def test_evaluate_returns_four_metrics():
     result = evaluate([1, 2, 3], [1, 3, 2])
-    assert set(result) == {"MAE", "MSE", "RMSE"}
+    assert set(result) == {"MAE", "MSE", "RMSE", "MAPE"}
     assert result["MAE"] > 0
+    assert result["MAPE"] >= 0
