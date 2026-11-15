@@ -60,3 +60,14 @@ def test_metrics_are_computed_without_external_ml_library():
     assert result["MAE"] == 2 / 3
     assert result["MSE"] == 2 / 3
     assert np.isclose(result["RMSE"], np.sqrt(2 / 3))
+    assert np.isclose(result["MAPE"], 50.0)
+
+
+def test_mape_ignores_zero_actual_values():
+    result = regression_metrics([0, 100, 200], [50, 90, 220])
+    assert np.isclose(result["MAPE"], 15.0)
+
+
+def test_mape_is_nan_when_all_actual_values_are_zero():
+    result = regression_metrics([0, 0], [1, 2])
+    assert np.isnan(result["MAPE"])
