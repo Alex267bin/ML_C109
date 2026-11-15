@@ -4,13 +4,13 @@ from __future__ import annotations
 from pathlib import Path
 import json
 
-import joblib
+import pickle
 import pandas as pd
 from flask import Flask, jsonify, render_template, request
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data" / "raw"
-MODEL_PATH = ROOT / "models" / "saved_models" / "best_model.joblib"
+MODEL_PATH = ROOT / "models" / "saved_models" / "best_model.pkl"
 
 app = Flask(__name__)
 
@@ -18,12 +18,13 @@ app = Flask(__name__)
 def load_assets():
     if not MODEL_PATH.exists():
         raise FileNotFoundError(
-            "Chưa tìm thấy models/saved_models/best_model.joblib. "
+            "Chưa tìm thấy models/saved_models/best_model.pkl. "
             "Hãy chạy python -m scripts.run_pipeline để huấn luyện mô hình trước."
         )
     if not (DATA / "stores.csv").exists():
         raise FileNotFoundError("Thiếu data/raw/stores.csv.")
-    model = joblib.load(MODEL_PATH)
+    with MODEL_PATH.open("rb") as file:
+        bundle = pickle.load(file)
     stores = pd.read_csv(DATA / "stores.csv")
     oil = pd.read_csv(DATA / "oil.csv", parse_dates=["date"])
     holidays = pd.read_csv(DATA / "holidays_events.csv", parse_dates=["date"])
@@ -32,11 +33,11 @@ def load_assets():
         holidays.groupby("date")["is_holiday"].max()
         .loc[lambda values: values].index.date
     )
-    return model, stores, oil, holiday_days
+    return bundle, stores, oil, holiday_days
 
 
 def prediction_row(store_nbr: int, family: str, date_value: str, promotion: int):
-    model, stores, oil, holiday_days = load_assets()
+    bundle, stores, oil, holiday_days = load_assets()
     store_matches = stores.loc[stores["store_nbr"] == store_nbr]
     if store_matches.empty:
         raise ValueError("Không tìm thấy cửa hàng đã chọn.")
@@ -62,7 +63,8 @@ def prediction_row(store_nbr: int, family: str, date_value: str, promotion: int)
         "week_of_year": int(date.isocalendar().week),
         "is_weekend": int(day_of_week in (5, 6)),
     }])
-    prediction = max(0.0, float(model.predict(row)[0]))
+    matrix = bundle["preprocessor"].transform(row)
+    prediction = max(0.0, float(bundle["model"].predict(matrix)[0]))
     return prediction
 
 
@@ -89,7 +91,7 @@ def predict():
         if promotion < 0:
             raise ValueError("Số mặt hàng khuyến mãi không được âm.")
         prediction = prediction_row(store_nbr, family, date_value, promotion)
-        return jsonify({"prediction": prediction, "unit": "đơn vị sản phẩm", "model": "Mô hình tốt nhất đã huấn luyện"})
+        return jsonify({"prediction": prediction, "unit": "đơn vị sản phẩm", "model": bundle.get("model_name", "Mô hình tự huấn luyện")})
     except (KeyError, TypeError, ValueError) as exc:
         return jsonify({"error": str(exc)}), 400
     except FileNotFoundError as exc:
