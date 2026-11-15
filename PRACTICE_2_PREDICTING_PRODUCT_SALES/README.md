@@ -42,11 +42,15 @@ Chương trình thực hiện các bước: đọc dữ liệu, tạo đặc tr�
 
 Dự án không sử dụng scikit-learn. Các thuật toán, tiền xử lý, chia dữ liệu và chỉ số đánh giá được tự triển khai bằng NumPy/Pandas. Model được lưu bằng `pickle` của Python, không dùng joblib.
 
-## 6. Tài liệu mô tả thuật toán
+## 6. Cấu trúc mã nguồn mô hình
+
+Các thuật toán được tách riêng trong `models/algorithms/`: `linear_regression.py`, `decision_tree.py`, `random_forest.py` và `gradient_boosting.py`. Tiền xử lý nằm trong `models/preprocessing.py`, chỉ số đánh giá nằm trong `models/metrics.py`; `scripts/pipeline.py` điều phối toàn bộ quy trình.
+
+## 7. Tài liệu mô tả thuật toán
 
 Xem [Mô tả các thuật toán học máy](docs/MO_TA_CAC_THUAT_TOAN.md) để tìm hiểu mục tiêu bài toán, tiền xử lý dữ liệu, nguyên lý hoạt động, đầu vào/đầu ra, tham số, ưu nhược điểm của bốn thuật toán và cách đánh giá mô hình.
 
-## 7. Kết quả đầu ra
+## 8. Kết quả đầu ra
 - `outputs/metrics/model_comparison.csv`: bảng so sánh các mô hình.
 - `outputs/metrics/best_model.json`: thông tin mô hình tốt nhất.
 - `outputs/predictions/validation_predictions.csv`: kết quả dự đoán trên tập kiểm định.
@@ -54,7 +58,7 @@ Xem [Mô tả các thuật toán học máy](docs/MO_TA_CAC_THUAT_TOAN.md) để
 
 Các chỉ số được tạo khi chạy chương trình; tài liệu không điền sẵn hoặc tự tạo số liệu kết quả.
 
-## 8. Lưu ý về phương pháp
+## 9. Lưu ý về phương pháp
 - Tập kiểm định được tách theo trình tự thời gian, không chia ngẫu nhiên.
 - Giai đoạn cuối của dòng thời gian trong tập huấn luyện được dùng làm tập kiểm định.
 - Đặc trưng khuyến mãi và lịch được tạo từ những dữ liệu thực tế hiện có.
@@ -62,7 +66,7 @@ Các chỉ số được tạo khi chạy chương trình; tài liệu không đ
 - Dữ liệu giao dịch không được đưa vào bộ đặc trưng cơ sở vì tổng giao dịch trong tương lai có thể chưa biết tại thời điểm dự đoán.
 - Đây là quy trình huấn luyện và minh họa chạy cục bộ, chưa phải dịch vụ triển khai thực tế.
 
-## 9. Chạy giao diện minh họa
+## 10. Chạy giao diện minh họa
 Sau khi huấn luyện và tạo tệp mô hình tốt nhất:
 
 ```bash
