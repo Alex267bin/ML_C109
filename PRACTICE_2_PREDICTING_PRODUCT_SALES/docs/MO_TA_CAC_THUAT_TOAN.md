@@ -22,7 +22,7 @@ Trước khi huấn luyện, chương trình thực hiện:
    - **Dữ liệu số:** thay giá trị thiếu bằng trung vị (`median`), sau đó tự chuẩn hóa bằng trung bình và độ lệch chuẩn tính từ tập huấn luyện.
    - **Dữ liệu phân loại:** thay giá trị thiếu bằng giá trị xuất hiện nhiều nhất (`most_frequent`), sau đó tự mã hóa One-Hot bằng NumPy. Giá trị phân loại chưa gặp khi huấn luyện được bỏ qua thay vì gây lỗi.
 
-Các bước tiền xử lý được cài đặt trong `NumpyPreprocessor` tại `scripts/custom_ml.py`. Bộ tiền xử lý chỉ được fit trên tập huấn luyện rồi dùng nguyên tham số đó để biến đổi tập kiểm định.
+Các bước tiền xử lý được cài đặt trong `NumpyPreprocessor` tại `models/preprocessing.py`. Bộ tiền xử lý chỉ được fit trên tập huấn luyện rồi dùng nguyên tham số đó để biến đổi tập kiểm định.
 
 ## 3. Các thuật toán được sử dụng
 
@@ -142,12 +142,23 @@ Mã nguồn tự tính MAE, MSE và RMSE bằng NumPy, sắp xếp bảng theo R
 
 ## 7. Tự cài đặt và giới hạn thư viện
 
-Toàn bộ thuật toán được triển khai trong `scripts/custom_ml.py` bằng NumPy và Pandas:
+Các thuật toán được tách thành từng module trong `models/algorithms/`; tiền xử lý nằm ở `models/preprocessing.py` và chỉ số đánh giá nằm ở `models/metrics.py`. Tất cả được tự cài đặt bằng NumPy và Pandas:
 
 - `LinearRegressionGD`: cập nhật trọng số và bias bằng mini-batch Gradient Descent.
 - `DecisionTreeRegressorCustom`: chọn feature/ngưỡng chia làm giảm tổng bình phương sai số; giá trị lá là trung bình target.
 - `RandomForestRegressorCustom`: huấn luyện nhiều cây trên bootstrap sample và lấy trung bình dự đoán.
 - `GradientBoostingRegressorCustom`: huấn luyện cây tuần tự trên residual của mô hình hiện tại.
-- `NumpyPreprocessor`: điền giá trị thiếu, chuẩn hóa và One-Hot Encoding.
+- `NumpyPreprocessor` (`models/preprocessing.py`): điền giá trị thiếu, chuẩn hóa và One-Hot Encoding.
 
 Không import hoặc gọi API từ scikit-learn. MAE, MSE, RMSE cũng được tự tính bằng NumPy. Đây là phiên bản triển khai phục vụ học tập; các cấu hình cây được giới hạn để phù hợp tài nguyên máy và cần được đánh giá thực nghiệm trước khi kết luận mô hình tốt nhất.
+
+
+## 8. Cấu trúc mã nguồn mô hình
+
+- `models/algorithms/linear_regression.py`: Hồi quy tuyến tính.
+- `models/algorithms/decision_tree.py`: Cây quyết định hồi quy.
+- `models/algorithms/random_forest.py`: Rừng ngẫu nhiên.
+- `models/algorithms/gradient_boosting.py`: Tăng cường Gradient.
+- `models/preprocessing.py`: Tiền xử lý dữ liệu.
+- `models/metrics.py`: Tính MAE, MSE và RMSE.
+- `scripts/pipeline.py`: Điều phối tiền xử lý, huấn luyện, đánh giá và lưu mô hình.
