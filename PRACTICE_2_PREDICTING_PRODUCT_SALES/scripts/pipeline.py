@@ -10,13 +10,13 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from scripts.custom_ml import (
-    NumpyPreprocessor,
+from models.preprocessing import NumpyPreprocessor
+from models.metrics import regression_metrics
+from models.algorithms import (
     LinearRegressionGD,
     DecisionTreeRegressorCustom,
     RandomForestRegressorCustom,
     GradientBoostingRegressorCustom,
-    regression_metrics,
 )
 
 LOGGER = logging.getLogger("sales_pipeline")
