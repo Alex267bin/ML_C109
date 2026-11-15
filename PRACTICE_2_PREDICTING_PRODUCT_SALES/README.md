@@ -38,19 +38,23 @@ python -m scripts.run_pipeline --data-dir data/raw --output-dir outputs
 
 Chương trình thực hiện các bước: đọc dữ liệu, tạo đặc trưng, chia tập kiểm định theo thứ tự thời gian, huấn luyện các mô hình Hồi quy tuyến tính, Cây quyết định, Rừng ngẫu nhiên và Tăng cường Gradient, đánh giá bằng MAE, MSE, RMSE và lưu mô hình.
 
-## 5. Tài liệu mô tả thuật toán
+## 5. Quy định tự cài đặt thuật toán
+
+Dự án không sử dụng scikit-learn. Các thuật toán, tiền xử lý, chia dữ liệu và chỉ số đánh giá được tự triển khai bằng NumPy/Pandas. Model được lưu bằng `pickle` của Python, không dùng joblib.
+
+## 6. Tài liệu mô tả thuật toán
 
 Xem [Mô tả các thuật toán học máy](docs/MO_TA_CAC_THUAT_TOAN.md) để tìm hiểu mục tiêu bài toán, tiền xử lý dữ liệu, nguyên lý hoạt động, đầu vào/đầu ra, tham số, ưu nhược điểm của bốn thuật toán và cách đánh giá mô hình.
 
-## 6. Kết quả đầu ra
+## 7. Kết quả đầu ra
 - `outputs/metrics/model_comparison.csv`: bảng so sánh các mô hình.
 - `outputs/metrics/best_model.json`: thông tin mô hình tốt nhất.
 - `outputs/predictions/validation_predictions.csv`: kết quả dự đoán trên tập kiểm định.
-- `models/saved_models/best_model.joblib`: mô hình tốt nhất đã lưu.
+- `models/saved_models/best_model.pkl`: mô hình tốt nhất đã lưu.
 
 Các chỉ số được tạo khi chạy chương trình; tài liệu không điền sẵn hoặc tự tạo số liệu kết quả.
 
-## 7. Lưu ý về phương pháp
+## 8. Lưu ý về phương pháp
 - Tập kiểm định được tách theo trình tự thời gian, không chia ngẫu nhiên.
 - Giai đoạn cuối của dòng thời gian trong tập huấn luyện được dùng làm tập kiểm định.
 - Đặc trưng khuyến mãi và lịch được tạo từ những dữ liệu thực tế hiện có.
@@ -58,7 +62,7 @@ Các chỉ số được tạo khi chạy chương trình; tài liệu không đ
 - Dữ liệu giao dịch không được đưa vào bộ đặc trưng cơ sở vì tổng giao dịch trong tương lai có thể chưa biết tại thời điểm dự đoán.
 - Đây là quy trình huấn luyện và minh họa chạy cục bộ, chưa phải dịch vụ triển khai thực tế.
 
-## 8. Chạy giao diện minh họa
+## 9. Chạy giao diện minh họa
 Sau khi huấn luyện và tạo tệp mô hình tốt nhất:
 
 ```bash
