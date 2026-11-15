@@ -122,17 +122,16 @@ def run_pipeline(
     )
 
     if max_train_rows > 0 and len(X_train) > max_train_rows:
-        X_train, y_train = _sample_arrays(
-            X_train.to_numpy(dtype=object), y_train.to_numpy(), max_train_rows
-        )
-        # Khôi phục DataFrame để bộ tiền xử lý nhận biết cột phân loại.
-        X_train = pd.DataFrame(X_train, columns=X.columns)
+        rng = np.random.default_rng(42)
+        selected = np.sort(rng.choice(len(X_train), size=max_train_rows, replace=False))
+        X_train = X_train.iloc[selected].copy()
+        y_train = y_train.iloc[selected].copy()
         LOGGER.info("Lấy mẫu %s dòng từ giai đoạn huấn luyện theo thời gian", len(X_train))
 
     preprocessor = NumpyPreprocessor().fit(X_train)
     train_matrix = preprocessor.transform(X_train)
     valid_matrix = preprocessor.transform(X_valid)
-    train_target = y_train.to_numpy(dtype=float)
+    train_target = np.asarray(y_train, dtype=float)
     valid_target = y_valid.to_numpy(dtype=float)
     LOGGER.info("Ma trận huấn luyện: %s; kiểm định: %s", train_matrix.shape, valid_matrix.shape)
 
