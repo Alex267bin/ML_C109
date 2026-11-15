@@ -22,6 +22,11 @@ from scripts.custom_ml import (
 LOGGER = logging.getLogger("sales_pipeline")
 
 
+def evaluate(y_true, predictions) -> dict[str, float]:
+    """Giữ tên hàm evaluate để tương thích với các bài kiểm thử hiện có."""
+    return regression_metrics(y_true, predictions)
+
+
 def load_data(data_dir: Path) -> pd.DataFrame:
     required = ["train.csv", "stores.csv", "holidays_events.csv", "oil.csv"]
     missing = [name for name in required if not (data_dir / name).exists()]
