@@ -53,7 +53,7 @@ Các bước tiền xử lý được cài đặt trong `NumpyPreprocessor` tạ
 
 **Tham số trong mã nguồn hiện tại:**
 - `max_depth=12`: giới hạn độ sâu tối đa của cây.
-- `min_samples_leaf=50`: mỗi nút lá phải có tối thiểu 50 mẫu.
+- `min_samples_leaf=50`: mỗi nút lá phải có tối thiểu 50 mẫu. Mỗi feature có tối đa 12 ngưỡng ứng viên được xét.
 - `random_state=42`: cố định yếu tố ngẫu nhiên để hỗ trợ tái lập kết quả.
 
 **Đặc điểm:**
@@ -101,7 +101,7 @@ Các bước tiền xử lý được cài đặt trong `NumpyPreprocessor` tạ
 - `learning_rate=0.05`: hệ số điều chỉnh mức đóng góp của mỗi cây.
 - `max_depth=2`: giới hạn độ sâu của từng cây.
 - `min_samples_leaf=50`: tối thiểu 50 mẫu tại nút lá.
-- huấn luyện trên tập mẫu đã lấy ngẫu nhiên: các cây được huấn luyện trên cùng tập mẫu con đã lấy ngẫu nhiên từ dữ liệu huấn luyện.
+- huấn luyện trên tập mẫu đã lấy ngẫu nhiên: các cây được huấn luyện trên cùng tập mẫu con 30.000 dòng đã lấy ngẫu nhiên từ dữ liệu huấn luyện.
 - `random_state=42`: cố định yếu tố ngẫu nhiên.
 
 **Đặc điểm:**
