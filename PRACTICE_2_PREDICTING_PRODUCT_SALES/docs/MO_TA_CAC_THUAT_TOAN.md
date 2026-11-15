@@ -53,7 +53,7 @@ Các bước tiền xử lý được cài đặt trong `NumpyPreprocessor` tạ
 
 **Tham số trong mã nguồn hiện tại:**
 - `max_depth=12`: giới hạn độ sâu tối đa của cây.
-- `min_samples_leaf=50`: mỗi nút lá phải có tối thiểu 30 mẫu.
+- `min_samples_leaf=50`: mỗi nút lá phải có tối thiểu 50 mẫu.
 - `random_state=42`: cố định yếu tố ngẫu nhiên để hỗ trợ tái lập kết quả.
 
 **Đặc điểm:**
@@ -72,11 +72,11 @@ Các bước tiền xử lý được cài đặt trong `NumpyPreprocessor` tạ
 4. Lấy trung bình dự đoán của các cây để tạo kết quả cuối cùng cho bài toán hồi quy.
 
 **Tham số trong mã nguồn hiện tại:**
-- `n_estimators=12`: sử dụng 60 cây.
+- `n_estimators=12`: sử dụng 12 cây.
 - `max_depth=10`: giới hạn độ sâu mỗi cây.
-- `min_samples_leaf=50`: tối thiểu 10 mẫu tại mỗi nút lá.
-- chọn ngẫu nhiên một số đặc trưng tại mỗi nút: mỗi phép chia xem xét tối đa 80% số đặc trưng.
-- không sử dụng xử lý song song từ thư viện ML: tận dụng các lõi xử lý có sẵn.
+- `min_samples_leaf=50`: tối thiểu 50 mẫu tại mỗi nút lá.
+- chọn ngẫu nhiên một số đặc trưng tại mỗi nút: mỗi nút chọn ngẫu nhiên khoảng căn bậc hai số đặc trưng để xét.
+- không sử dụng xử lý song song từ thư viện ML: các cây được huấn luyện tuần tự trong phiên bản hiện tại.
 - `random_state=42`: cố định yếu tố ngẫu nhiên.
 
 **Đặc điểm:**
@@ -97,11 +97,11 @@ Các bước tiền xử lý được cài đặt trong `NumpyPreprocessor` tạ
 6. Cộng đóng góp của các cây để tạo dự đoán cuối cùng.
 
 **Tham số trong mã nguồn hiện tại:**
-- `n_estimators=15`: xây dựng 80 cây theo tuần tự.
+- `n_estimators=15`: xây dựng 15 cây theo tuần tự.
 - `learning_rate=0.05`: hệ số điều chỉnh mức đóng góp của mỗi cây.
 - `max_depth=2`: giới hạn độ sâu của từng cây.
-- `min_samples_leaf=50`: tối thiểu 30 mẫu tại nút lá.
-- huấn luyện trên tập mẫu đã lấy ngẫu nhiên: mỗi giai đoạn sử dụng 80% mẫu huấn luyện.
+- `min_samples_leaf=50`: tối thiểu 50 mẫu tại nút lá.
+- huấn luyện trên tập mẫu đã lấy ngẫu nhiên: các cây được huấn luyện trên cùng tập mẫu con đã lấy ngẫu nhiên từ dữ liệu huấn luyện.
 - `random_state=42`: cố định yếu tố ngẫu nhiên.
 
 **Đặc điểm:**
