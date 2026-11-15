@@ -43,7 +43,7 @@ def prediction_row(store_nbr: int, family: str, date_value: str, promotion: int)
     date = pd.Timestamp(date_value)
     oil_before = oil.loc[oil["date"] <= date, "dcoilwtico"].dropna()
     oil_price = float(oil_before.iloc[-1]) if not oil_before.empty else float("nan")
-    day_of_week = date.dayofweek
+    day_of_week = date.day_of_week
     row = pd.DataFrame([{
         "store_nbr": store_nbr,
         "family": family,
